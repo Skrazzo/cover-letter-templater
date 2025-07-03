@@ -1,11 +1,20 @@
 package main
 
-import "time"
+import (
+	"backend/config"
+	"backend/routes"
+	"log"
+	"net/http"
+)
 
 func main() {
-	println("Hello, world!")
+	// Load env variables
+	env := config.LoadEnv()
 
-	for {
-		time.Sleep(1 * time.Second)
-	}
+	// Setup routes
+	routes := routes.SetupRoutes()
+
+	// Listen on port smth
+	log.Printf("Starting server on %s PORT\n", env["port"])
+	log.Fatal(http.ListenAndServe(":"+env["port"], routes))
 }

@@ -1,10 +1,9 @@
 {
-  "name": ".",
+  "name": "Cover letter frontend",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --port 3000",
-    "start": "vite --port 3000",
+    "dev": "vite --port 3000 --host",
     "build": "vite build && tsc",
     "serve": "vite preview",
     "test": "vitest run"
@@ -35,3 +34,4 @@
     "web-vitals": "^4.2.4"
   }
 }
+
