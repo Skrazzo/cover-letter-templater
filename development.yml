@@ -9,8 +9,12 @@ services:
     environment:
       - GIN_MODE=debug
       # - GIN_MODE=release # For production
+      - POSTGRES_DB=postgresql://postgres:postgres@db:5432/cover-letter
+      # - POSTGRES_DB=postgresql://username:password@host:port/database_name
     networks:
       - cover-letter-network
+    depends_on:
+      - db
   frontend:
     build:
       context: ./frontend
@@ -27,6 +31,7 @@ services:
   proxy:
     image: caddy:alpine
     restart: unless-stopped
+    container_name: cover-letter-proxy
 
     networks:
       - cover-letter-network
@@ -34,6 +39,22 @@ services:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
     ports:
       - 8080:8080
+    depends_on:
+      - frontend
+      - backend
+  db:
+    image: postgres:13.21-alpine3.22
+    restart: unless-stopped
+    container_name: cover-letter-db
+
+    networks:
+      - cover-letter-network
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=cover-letter
+    ports:
+      - 5432:5432
 
 networks:
   cover-letter-network:
