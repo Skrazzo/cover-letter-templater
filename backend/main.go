@@ -4,7 +4,6 @@ import (
 	"backend/config"
 	"backend/routes"
 	"log"
-	"net/http"
 )
 
 func main() {
@@ -16,5 +15,5 @@ func main() {
 
 	// Listen on port smth
 	log.Printf("Starting server on %s PORT\n", env["port"])
-	log.Fatal(http.ListenAndServe(":"+env["port"], routes))
+	log.Fatal(routes.Run(":8080"))
 }

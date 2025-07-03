@@ -2,3 +2,11 @@
     admin off
     auto_https off
 }
+
+:8080 {
+    reverse_proxy frontend:3000
+
+    handle_path /api* {
+        reverse_proxy backend:8080
+    }
+}

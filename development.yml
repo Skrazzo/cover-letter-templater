@@ -3,10 +3,12 @@ services:
     build:
       context: ./backend
       dockerfile: ../Dockerfile.backend
-
+    restart: unless-stopped
     container_name: cover-letter-backend
+
     environment:
-      - PORT=8080 # Internal container port
+      - GIN_MODE=debug
+      # - GIN_MODE=release # For production
     networks:
       - cover-letter-network
   frontend:
@@ -14,16 +16,24 @@ services:
       context: ./frontend
       dockerfile: ../Dockerfile.frontend
       target: dev # Development stage
+    restart: unless-stopped
     container_name: cover-letter-frontend
 
     volumes:
       - "./frontend:/app" # Mount frontend
       - "/app/node_modules" # Ignore node_modules
-
-    ports:
-      - 3000:3000
     networks:
       - cover-letter-network
+  proxy:
+    image: caddy:alpine
+    restart: unless-stopped
+
+    networks:
+      - cover-letter-network
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - 8080:8080
 
 networks:
   cover-letter-network:

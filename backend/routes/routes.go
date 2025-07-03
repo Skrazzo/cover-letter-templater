@@ -3,16 +3,16 @@ package routes
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/gin-gonic/gin"
 )
 
-func SetupRoutes() http.Handler {
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
+func SetupRoutes() *gin.Engine {
+	r := gin.Default()
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World!"))
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
 	})
 
 	return r
