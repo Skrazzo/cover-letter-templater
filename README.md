@@ -30,6 +30,9 @@ backend/
 ├── models/                 # Data models, structs, db access
 │   ├── user.go
 │   └── coverletter.go
+├── db/                     # Database connections  / migrations
+│   ├── db.go
+│   └── migrations.sql
 ├── services/               # Business logic (e.g. OpenAI integration)
 │   ├── auth_service.go
 │   └── coverletter_service.go

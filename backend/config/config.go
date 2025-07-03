@@ -14,7 +14,7 @@ func LoadEnv() map[string]string {
 	env := make(map[string]string, 1)
 
 	// Get env variables that will be used while server is running
-	env["port"] = defaultValue(os.Getenv("PORT"), "8080")
+	env["db"] = defaultValue(os.Getenv("POSTGRES_DB"), "postgresql://postgres:postgres@db:5432/cover-letter")
 
 	return env
 }

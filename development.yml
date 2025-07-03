@@ -14,7 +14,8 @@ services:
     networks:
       - cover-letter-network
     depends_on:
-      - db
+      db: # Wait for database to be ready (Pass healthcheck)
+        condition: service_healthy
   frontend:
     build:
       context: ./frontend
@@ -52,9 +53,17 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      # - POSTGRES_HOST_AUTH_METHOD=trust # No password needed
       - POSTGRES_DB=cover-letter
     ports:
       - 5432:5432
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 networks:
   cover-letter-network:
