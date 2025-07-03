@@ -1,0 +1,14 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../Dockerfile.backend
+
+    container_name: cover-letter-backend
+
+    networks:
+      - cover-letter-network
+
+networks:
+  cover-letter-network:
+    driver: bridge
