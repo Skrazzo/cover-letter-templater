@@ -52,4 +52,9 @@ TODO: ADD DEPLOYMENT INSTRUCTIONS
 
 ## Development
 
-TODO: ADD DEV INSTRUCTIONS
+If you want to run development version, you will need docker. Docker handles frontend, backend and proxies everything to single port.
+
+```sh
+# Run development environment
+docker compose -f development.yml up --build
+```
