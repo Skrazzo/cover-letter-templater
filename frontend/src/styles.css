@@ -4,8 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --color-body: #232323;
-    --color-panel: #101010;
+    --color-body: rgb(230, 230, 230);
+    --color-panel: rgb(250, 250, 250);
 }
 
 body {
@@ -129,10 +129,10 @@ code {
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+    body {
+        @apply bg-background text-foreground;
     }
 }
