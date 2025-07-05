@@ -2,7 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAppForm } from "@/hooks/formHook";
 import Guest from "@/layouts/Guest";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import requests from "@/lib/requests";
+import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import * as z from "zod/v4";
 
 export const Route = createFileRoute("/register")({
@@ -10,18 +13,23 @@ export const Route = createFileRoute("/register")({
 });
 
 const registerSchema = z
+    // Basic validation
     .object({
         email: z.string().email(),
-        name: z.string().min(2, "Name is too short"),
+        name: z.string().min(2, "Name is too short").max(50, "Name is too long (50 char max)"),
         password: z.string().min(8, "Password is too short"),
         repeatPassword: z.string().min(8, "Password is too short"),
     })
+    // Custom validation
     .refine((data) => data.password === data.repeatPassword, {
         message: "Passwords don't match",
         path: ["repeatPassword"],
     });
 
 function RouteComponent() {
+    const loading = useState(false);
+    const navigate = useNavigate();
+
     const form = useAppForm({
         defaultValues: {
             email: "",
@@ -33,13 +41,24 @@ function RouteComponent() {
             onBlur: registerSchema,
         },
         onSubmit: ({ value }) => {
-            console.log(value);
+            requests.post<{ message: string }>("/register", {
+                data: value,
+                before() {
+                    // use state to true loading
+                    loading[1](true);
+                },
+                success(data) {
+                    toast.success(data.message);
+                    form.reset();
+
+                    // Wait a bit before redirecting
+                    setTimeout(() => {
+                        navigate({ to: "/login" });
+                    }, 1000);
+                },
+            });
         },
     });
-
-    // useEffect(() => {
-    //     requests.post<{ message: string }>("/ping", { data: { hello: "world" } });
-    // }, []);
 
     return (
         <Guest className="h-screen w-screen grid place-items-center">
@@ -94,7 +113,7 @@ function RouteComponent() {
                         )}
                     />
 
-                    <Button onClick={form.handleSubmit} className="w-full">
+                    <Button disabled={loading[0]} onClick={form.handleSubmit} className="w-full">
                         Register
                     </Button>
                 </CardContent>
