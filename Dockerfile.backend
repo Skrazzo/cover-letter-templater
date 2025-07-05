@@ -7,6 +7,9 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
+# ---- Production mode ----
+FROM base AS prod
+
 # Copy code, and compile 
 COPY . .
 RUN go build -o server main.go
@@ -16,4 +19,11 @@ EXPOSE 8080
 
 # Run server binary on start
 CMD ["./server"]
+
+# ---- Development mode ----
+FROM base AS dev
+
+# Install air for hot reloading
+RUN go install github.com/air-verse/air@latest
+
 

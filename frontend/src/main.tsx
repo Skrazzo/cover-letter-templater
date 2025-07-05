@@ -9,6 +9,7 @@ import { routeTree } from "./routeTree.gen";
 
 import "./styles.css";
 import reportWebVitals from "./reportWebVitals.ts";
+import { Toaster } from "react-hot-toast";
 
 // Create a new router instance
 const router = createRouter({
@@ -34,11 +35,11 @@ const rootElement = document.getElementById("app");
 if (rootElement && !rootElement.innerHTML) {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
-        <StrictMode>
-            <TanStackQueryProvider.Provider>
-                <RouterProvider router={router} />
-            </TanStackQueryProvider.Provider>
-        </StrictMode>
+        <TanStackQueryProvider.Provider>
+            {/* Toaster for notifications */}
+            <Toaster position="top-right" reverseOrder={false} />
+            <RouterProvider router={router} />
+        </TanStackQueryProvider.Provider>
     );
 }
 

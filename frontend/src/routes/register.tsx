@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { useAppForm } from "@/hooks/formHook";
 import Guest from "@/layouts/Guest";
-import { useForm } from "@tanstack/react-form";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import * as z from "zod/v4";
 
@@ -13,8 +12,9 @@ export const Route = createFileRoute("/register")({
 const registerSchema = z
     .object({
         email: z.string().email(),
-        password: z.string().min(8),
-        repeatPassword: z.string().min(8),
+        name: z.string().min(2, "Name is too short"),
+        password: z.string().min(8, "Password is too short"),
+        repeatPassword: z.string().min(8, "Password is too short"),
     })
     .refine((data) => data.password === data.repeatPassword, {
         message: "Passwords don't match",
@@ -22,10 +22,11 @@ const registerSchema = z
     });
 
 function RouteComponent() {
-    const form = useForm({
+    const form = useAppForm({
         defaultValues: {
             email: "",
             password: "",
+            name: "",
             repeatPassword: "",
         },
         validators: {
@@ -35,6 +36,10 @@ function RouteComponent() {
             console.log(value);
         },
     });
+
+    // useEffect(() => {
+    //     requests.post<{ message: string }>("/ping", { data: { hello: "world" } });
+    // }, []);
 
     return (
         <Guest className="h-screen w-screen grid place-items-center">
@@ -48,23 +53,47 @@ function RouteComponent() {
                         </Button>
                     </CardAction>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                    <form.Field
+                <CardContent className="space-y-3">
+                    <form.AppField
                         name="email"
                         children={(field) => (
-                            <Input
-                                id={field.name}
-                                name={field.name}
-                                value={field.state.value}
-                                onBlur={field.handleBlur}
-                                onChange={(e) => field.handleChange(e.target.value)}
+                            <field.TextField
+                                label="Email address"
+                                placeholder="Your email address"
                                 type="email"
-                                placeholder="Email address"
                             />
                         )}
                     />
-                    <Input type="password" placeholder="Password" />
-                    <Input type="password" placeholder="Repeat password" />
+
+                    <form.AppField
+                        name="name"
+                        children={(field) => (
+                            <field.TextField label="Name" placeholder="Full name or nickname" />
+                        )}
+                    />
+
+                    <form.AppField
+                        name="password"
+                        children={(field) => (
+                            <field.TextField
+                                label="Password"
+                                placeholder="Your accounts password"
+                                type="password"
+                            />
+                        )}
+                    />
+
+                    <form.AppField
+                        name="repeatPassword"
+                        children={(field) => (
+                            <field.TextField
+                                label="Repeat password"
+                                placeholder="Repeat your password"
+                                type="password"
+                            />
+                        )}
+                    />
+
                     <Button onClick={form.handleSubmit} className="w-full">
                         Register
                     </Button>

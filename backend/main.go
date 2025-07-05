@@ -28,6 +28,6 @@ func main() {
 	routes := routes.SetupRoutes()
 
 	// Listen on port smth
-	log.Printf("Starting server on %s PORT\n", env["port"])
+	log.Printf("Starting server ...")
 	log.Fatal(routes.Run(":8080"))
 }

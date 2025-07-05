@@ -112,6 +112,7 @@
     /* My own variables */
     --color-body: var(--background);
     --color-panel: var(--card);
+    --color-danger: var(--destructive);
 }
 
 @layer base {

@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"net/http"
+	"backend/controllers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,11 +9,11 @@ import (
 func SetupRoutes() *gin.Engine {
 	r := gin.Default()
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
+	// Controllers
+	users := controllers.User{}
+
+	// Guest routes (Register, Login, check auth)
+	r.POST("/register", users.Register)
 
 	return r
 }
