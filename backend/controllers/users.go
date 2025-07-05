@@ -27,7 +27,7 @@ func (u *User) Register(c *gin.Context) {
 	validate := validator.New()
 	if err := validate.Struct(data); err != nil {
 		// Handle error
-		log.Fatalf("Error: %v", err.Error())
+		log.Printf("[ERROR]: %v", err.Error())
 	}
 
 	// fmt.Println(data)

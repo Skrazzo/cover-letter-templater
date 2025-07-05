@@ -26,4 +26,9 @@ FROM base AS dev
 # Install air for hot reloading
 RUN go install github.com/air-verse/air@latest
 
+# Copy code, and expose port
+COPY . .
+EXPOSE 8080
 
+# Enable hot reloading for go
+CMD [ "air" ]

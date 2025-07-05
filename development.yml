@@ -3,9 +3,12 @@ services:
     build:
       context: ./backend
       dockerfile: ../Dockerfile.backend
+      target: dev # Development mode with hot reload
     restart: unless-stopped
     container_name: cover-letter-backend
 
+    volumes:
+      - "./backend:/app"
     environment:
       - GIN_MODE=debug
       # - GIN_MODE=release # For production
