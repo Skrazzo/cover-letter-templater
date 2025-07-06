@@ -11,7 +11,7 @@ interface Props {
 
 export default function Authorised({ children, className = "" }: Props) {
     // Check authentication
-    const info = useQuery({
+    useQuery({
         queryKey: ["user_info"],
         queryFn: () => requests.get<TokenUserInfo>("/info", {}),
         staleTime: 60 * 1000, // 1 minutes
