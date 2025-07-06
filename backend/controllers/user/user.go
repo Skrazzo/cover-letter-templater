@@ -10,6 +10,8 @@ import (
 	"log"
 	"net/http"
 
+	JWT "github.com/golang-jwt/jwt"
+
 	res "backend/utils/responses"
 
 	"github.com/gin-gonic/gin"
@@ -132,4 +134,14 @@ func Login(c *gin.Context) {
 
 	// Return successful login
 	res.Success(c, gin.H{"message": "Successfully logged in"})
+}
+
+// Returns info from token middleware
+func TokenInfo(c *gin.Context) {
+	user := c.MustGet("user").(JWT.MapClaims)
+	res.Success(c, gin.H{
+		"id":    user["id"],
+		"name":  user["name"],
+		"email": user["email"],
+	})
 }

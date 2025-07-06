@@ -1,6 +1,8 @@
 package responses
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,5 +19,13 @@ func Error(c *gin.Context, err string, code int) {
 	c.JSON(code, gin.H{
 		"success": false,
 		"error":   err,
+	})
+}
+
+func NeedsToLogin(c *gin.Context) {
+	c.JSON(http.StatusUnauthorized, gin.H{
+		"success":             false,
+		"error":               "Authentication required",
+		"needsAuthentication": true, // only appears in this error
 	})
 }
