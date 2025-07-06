@@ -2,6 +2,7 @@ import { API_BASE } from "@/consts";
 import { normalizeLink } from "./utils";
 import type { ApiResponse } from "@/types/api";
 import toast from "react-hot-toast";
+import { tryCatch } from "./tryCatch";
 
 interface RequestProps<T> {
     error?: (err: Error) => void;
@@ -34,7 +35,10 @@ class Requests {
             });
 
             // Get response data
-            const data = (await res.json()) as ApiResponse<T>;
+            const { data, error } = await tryCatch<ApiResponse<T>>(res.json());
+            if (error) {
+                throw new Error(`Parsing error: ${res.statusText} - ${res.status}`);
+            }
 
             // Check if data is ok
             if ("success" in data && !data.success) {

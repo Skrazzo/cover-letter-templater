@@ -10,10 +10,10 @@ import (
 
 func main() {
 	// Load env variables
-	env := config.LoadEnv()
+	config.LoadEnv()
 
 	// Connect to database
-	err := db.Connect(env["db"])
+	err := db.Connect(config.Env["db"])
 	if err != nil {
 		os.Exit(1)
 	}

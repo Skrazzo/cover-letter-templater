@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"backend/controllers"
+	"backend/controllers/user"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,11 +9,9 @@ import (
 func SetupRoutes() *gin.Engine {
 	r := gin.Default()
 
-	// Controllers
-	users := controllers.User{}
-
 	// Guest routes (Register, Login, check auth)
-	r.POST("/register", users.Register)
+	r.POST("/register", user.Register)
+	r.POST("/login", user.Login)
 
 	return r
 }

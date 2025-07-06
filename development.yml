@@ -9,11 +9,15 @@ services:
 
     volumes:
       - "./backend:/app"
+    env_file:
+      - ./backend/.env
     environment:
-      - GIN_MODE=debug
       # - GIN_MODE=release # For production
-      - POSTGRES_DB=postgresql://postgres:postgres@db:5432/cover-letter
+      - GIN_MODE=debug
       # - POSTGRES_DB=postgresql://username:password@host:port/database_name
+      - POSTGRES_DB=postgresql://postgres:postgres@db:5432/cover-letter
+      # - Environment=prod # For production
+      - Environment=dev
     networks:
       - cover-letter-network
     depends_on:
