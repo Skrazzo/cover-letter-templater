@@ -5,7 +5,6 @@ import Guest from "@/layouts/Guest";
 import requests from "@/lib/requests";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import * as z from "zod/v4";
 
 export const Route = createFileRoute("/login")({
@@ -36,8 +35,14 @@ function RouteComponent() {
                     // use state to true loading
                     loading[1](true);
                 },
-                success(data) {
+                success() {
                     navigate({ to: "/" });
+                },
+                error() {
+                    form.setFieldValue("password", "");
+                },
+                finally() {
+                    loading[1](false);
                 },
             });
         },
@@ -77,7 +82,7 @@ function RouteComponent() {
                             />
                         )}
                     />
-                    <Button onClick={form.handleSubmit} className="w-full">
+                    <Button disabled={loading[0]} onClick={form.handleSubmit} className="w-full">
                         Login
                     </Button>
                 </CardContent>

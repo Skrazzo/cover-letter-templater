@@ -11,3 +11,10 @@ export interface ErrorResponse {
 }
 
 export type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
+
+// user info returned by /info route
+export interface TokenUserInfo {
+    id: number;
+    name: string;
+    email: string;
+}

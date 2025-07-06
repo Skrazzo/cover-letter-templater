@@ -16,14 +16,14 @@ func Success(c *gin.Context, data gin.H) {
 
 func Error(c *gin.Context, err string, code int) {
 	// Return error to api
-	c.JSON(code, gin.H{
+	c.AbortWithStatusJSON(code, gin.H{
 		"success": false,
 		"error":   err,
 	})
 }
 
 func NeedsToLogin(c *gin.Context) {
-	c.JSON(http.StatusUnauthorized, gin.H{
+	c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 		"success":             false,
 		"error":               "Authentication required",
 		"needsAuthentication": true, // only appears in this error
