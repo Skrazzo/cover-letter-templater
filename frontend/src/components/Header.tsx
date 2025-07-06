@@ -1,25 +1,15 @@
-import { Link } from '@tanstack/react-router'
+import { Link } from "@tanstack/react-router";
+import { House } from "lucide-react";
 
 export default function Header() {
-  return (
-    <header className="p-2 flex gap-2 bg-white text-black justify-between">
-      <nav className="flex flex-row">
-        <div className="px-2 font-bold">
-          <Link to="/">Home</Link>
-        </div>
-
-        <div className="px-2 font-bold">
-          <Link to="/demo/form/simple">Simple Form</Link>
-        </div>
-
-        <div className="px-2 font-bold">
-          <Link to="/demo/form/address">Address Form</Link>
-        </div>
-
-        <div className="px-2 font-bold">
-          <Link to="/demo/tanstack-query">TanStack Query</Link>
-        </div>
-      </nav>
-    </header>
-  )
+    return (
+        <header className="py-3 px-4 flex gap-2 bg-panel text-black justify-between shadow">
+            <nav className="flex flex-row font-bold">
+                <Link to="/" className="flex items-center gap-2">
+                    <House size={20} />
+                    Home
+                </Link>
+            </nav>
+        </header>
+    );
 }

@@ -3,14 +3,26 @@ services:
     build:
       context: ./backend
       dockerfile: ../Dockerfile.backend
+      target: dev # Development mode with hot reload
     restart: unless-stopped
     container_name: cover-letter-backend
 
+    volumes:
+      - "./backend:/app"
+    env_file:
+      - ./backend/.env
     environment:
-      - GIN_MODE=debug
       # - GIN_MODE=release # For production
+      - GIN_MODE=debug
+      # - POSTGRES_DB=postgresql://username:password@host:port/database_name
+      - POSTGRES_DB=postgresql://postgres:postgres@db:5432/cover-letter
+      # - Environment=prod # For production
+      - Environment=dev
     networks:
       - cover-letter-network
+    depends_on:
+      db: # Wait for database to be ready (Pass healthcheck)
+        condition: service_healthy
   frontend:
     build:
       context: ./frontend
@@ -27,13 +39,38 @@ services:
   proxy:
     image: caddy:alpine
     restart: unless-stopped
+    container_name: cover-letter-proxy
 
     networks:
       - cover-letter-network
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
     ports:
-      - 8080:8080
+      - 8000:8080
+    depends_on:
+      - frontend
+      - backend
+  db:
+    image: postgres:13.21-alpine3.22
+    restart: unless-stopped
+    container_name: cover-letter-db
+
+    networks:
+      - cover-letter-network
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      # - POSTGRES_HOST_AUTH_METHOD=trust # No password needed
+      - POSTGRES_DB=cover-letter
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 2s
+      retries: 5
 
 networks:
   cover-letter-network:
