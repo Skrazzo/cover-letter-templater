@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Success(c *gin.Context, data gin.H) {
+func Success(c *gin.Context, data any) {
 	// Return success to api
 	c.JSON(200, gin.H{
 		"success": true,

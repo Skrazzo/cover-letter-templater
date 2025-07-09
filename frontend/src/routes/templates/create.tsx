@@ -11,7 +11,11 @@ export const Route = createFileRoute("/templates/create")({
 });
 
 const TemplateSchema = z.object({
-    name: z.string().nonempty("Name is required"),
+    name: z
+        .string()
+        .nonempty("Name is required")
+        .min(2, "Name is too short")
+        .max(50, "Name is too long (max 50)"),
     template: z.string().nonempty("Template is required"),
 });
 

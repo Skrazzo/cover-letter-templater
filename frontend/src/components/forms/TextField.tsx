@@ -7,6 +7,7 @@ interface TextFieldProps {
     placeholder?: string;
     label?: string;
     type?: React.ComponentProps<"input">["type"];
+    maxLength?: React.ComponentProps<"input">["maxLength"];
     className?: string;
 }
 
@@ -15,6 +16,7 @@ export default function TextField({
     type = "text",
     className = "",
     label = "",
+    maxLength = 255,
 }: TextFieldProps) {
     // Get field with predefined text type
     const field = useFieldContext<string>();
@@ -30,6 +32,7 @@ export default function TextField({
 
             <Input
                 id={field.name}
+                maxLength={maxLength}
                 name={field.name}
                 value={field.state.value}
                 onBlur={field.handleBlur}

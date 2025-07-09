@@ -11,7 +11,7 @@ const Template = withForm({
             <div className="mt-4 flex flex-col gap-4">
                 <form.AppField
                     name="name"
-                    children={(f) => <f.TextField label="Name" placeholder="Template name" />}
+                    children={(f) => <f.TextField maxLength={50} label="Name" placeholder="Template name" />}
                 />
 
                 <form.AppField name="template" children={(f) => <f.RichTextEdit />} />
