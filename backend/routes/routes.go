@@ -11,7 +11,7 @@ import (
 func SetupRoutes() *gin.Engine {
 	r := gin.Default()
 
-	// Guest routes (Register, Login, check auth)
+	// Guest routes (Register, Login)
 	r.POST("/register", user.Register)
 	r.POST("/login", user.Login)
 
@@ -24,7 +24,7 @@ func SetupRoutes() *gin.Engine {
 
 	// Template routes (REST FUCKING GOOOOO)
 	templates := auth.Group("/templates")
-	// GET (Gets all templates)
+	templates.GET("", template.Get)
 	templates.POST("", template.Create)
 	// PUT (Edit)
 	// DELETE (Delete)

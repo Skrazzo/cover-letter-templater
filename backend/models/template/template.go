@@ -7,11 +7,11 @@ import (
 )
 
 type Template struct {
-	ID        int
-	UserID    int
-	Name      string
-	Template  string
-	CreatedAt time.Time
+	ID        int       `json:"id"`
+	UserID    int       `json:"user_id"`
+	Name      string    `json:"name"`
+	Template  string    `json:"template"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func Create(name string, template string, userId float64) error {
@@ -30,18 +30,23 @@ func Create(name string, template string, userId float64) error {
 // * will follow the pointer to its value
 // If user id is 0, then we will search only by name
 func FindByName(name string, userId float64) ([]Template, error) {
+	templates, err := Get(`"name" = $1 AND user_id = $2`, name, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return templates, nil
+}
+
+func Get(where string, args ...any) ([]Template, error) {
 	// Create timeout context
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	// Build query and execute
-	query := `SELECT * FROM templates WHERE "name" = $1`
-	args := []any{name}
-
-	// Do we need to search by user id?
-	if userId > 0 {
-		query += " AND user_id = $2"
-		args = append(args, userId)
+	query := `SELECT * FROM templates`
+	if where != "" {
+		query += " WHERE " + where
 	}
 
 	rows, err := db.Pool.Query(ctx, query, args...)
@@ -65,6 +70,5 @@ func FindByName(name string, userId float64) ([]Template, error) {
 		results = append(results, t)
 	}
 
-	// Give pointer back
 	return results, nil
 }

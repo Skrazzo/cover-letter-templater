@@ -34,7 +34,7 @@ func Create(c *gin.Context) {
 	// Get user id
 	user, err := jwt.GetUser(c)
 	if err != nil {
-		res.Error(c, err.Error(), http.StatusInternalServerError)
+		res.NeedsToLogin(c)
 		return
 	}
 
@@ -61,6 +61,21 @@ func Create(c *gin.Context) {
 }
 
 func Get(c *gin.Context) {
+	// Get user from context
+	user, err := jwt.GetUser(c)
+	if err != nil {
+		res.NeedsToLogin(c)
+		return
+	}
+
+	// Get all user templates
+	templates, err := template.Get("user_id = $1", user.Id)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	res.Success(c, templates)
 }
 
 func Update(c *gin.Context) {
