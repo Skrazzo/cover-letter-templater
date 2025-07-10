@@ -2,7 +2,8 @@ import Template from "@/components/Template";
 import { Button } from "@/components/ui/button";
 import { useAppForm } from "@/hooks/formHook";
 import Authorised from "@/layouts/Authorised";
-import { createFileRoute } from "@tanstack/react-router";
+import requests from "@/lib/requests";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import * as z from "zod/v4";
 
@@ -16,11 +17,12 @@ const TemplateSchema = z.object({
         .nonempty("Name is required")
         .min(2, "Name is too short")
         .max(50, "Name is too long (max 50)"),
-    template: z.string().nonempty("Template is required"),
+    template: z.string().nonempty("Template is required").min(50, "Template is too short"),
 });
 
 function RouteComponent() {
     const loading = useState(false);
+    const navigate = useNavigate();
     const createForm = useAppForm({
         defaultValues: {
             name: "",
@@ -28,6 +30,20 @@ function RouteComponent() {
         },
         validators: {
             onBlur: TemplateSchema,
+        },
+        onSubmit: ({ value }) => {
+            requests.post("/templates", {
+                before() {
+                    loading[1](true);
+                },
+                finally() {
+                    loading[1](false);
+                },
+                success() {
+                    navigate({ to: "/templates" });
+                },
+                data: value,
+            });
         },
     });
 
