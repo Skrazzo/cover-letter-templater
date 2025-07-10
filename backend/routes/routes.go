@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/controllers/template"
 	"backend/controllers/user"
 	"backend/middleware"
 
@@ -10,7 +11,7 @@ import (
 func SetupRoutes() *gin.Engine {
 	r := gin.Default()
 
-	// Guest routes (Register, Login, check auth)
+	// Guest routes (Register, Login)
 	r.POST("/register", user.Register)
 	r.POST("/login", user.Login)
 
@@ -18,7 +19,15 @@ func SetupRoutes() *gin.Engine {
 	auth := r.Group("/")
 	auth.Use(middleware.IsAuthenticated())
 
-	auth.GET("/info", user.TokenInfo) // Route to check if user is authenticated
+	// Route to check if user is authenticated
+	auth.GET("/info", user.TokenInfo)
+
+	// Template routes (REST FUCKING GOOOOO)
+	templates := auth.Group("/templates")
+	templates.GET("", template.Get)
+	templates.POST("", template.Create)
+	// PUT (Edit)
+	// DELETE (Delete)
 
 	return r
 }

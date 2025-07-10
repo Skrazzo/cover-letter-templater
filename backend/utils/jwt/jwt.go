@@ -6,8 +6,15 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
+
+type UserClaims struct {
+	Id    float64 `json:"id"`
+	Name  string  `json:"name"`
+	Email string  `json:"email"`
+}
 
 func GenerateJWT(u *user.User) (string, error) {
 	// Generate JWT token
@@ -52,4 +59,24 @@ func ParseJWT(tokenString string) (jwt.MapClaims, error) {
 
 	// Return on invalid token
 	return nil, fmt.Errorf("invalid token")
+}
+
+func GetUser(c *gin.Context) (UserClaims, error) {
+	// Get user from context
+	user, ok := c.Get("user")
+	if !ok {
+		return UserClaims{}, fmt.Errorf("no user in middleware context")
+	}
+
+	// Get claims from user
+	mapClaims, ok := user.(jwt.MapClaims)
+	if !ok {
+		return UserClaims{}, fmt.Errorf("invalid token claims")
+	}
+
+	return UserClaims{
+		Id:    mapClaims["id"].(float64),
+		Name:  mapClaims["name"].(string),
+		Email: mapClaims["email"].(string),
+	}, nil
 }

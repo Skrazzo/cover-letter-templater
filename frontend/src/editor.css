@@ -1,0 +1,102 @@
+:root {
+    --editor-accent: #1c81d9;
+}
+
+.tiptap-container {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.05);
+
+    .control-group {
+        border-bottom: 1px solid var(--border);
+        padding: 0.5rem;
+    }
+
+    .tiptap {
+        outline: none;
+        padding: 1rem;
+    }
+}
+
+/* Basic editor styles */
+.tiptap {
+    :first-child {
+        margin-top: 0;
+    }
+
+    /* Links */
+    a {
+        color: var(--editor-accent);
+        text-decoration: underline;
+    }
+
+    /* List styles */
+    ul {
+        list-style: disc;
+    }
+    ol {
+        list-style: decimal;
+    }
+
+    ul,
+    ol {
+        ::marker {
+            color: var(--editor-accent);
+        }
+
+        padding: 0 1rem;
+
+        p {
+            /* Text in list */
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    /* Heading styles */
+    h1,
+    h2,
+    h3 {
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+
+    h2 {
+        font-weight: 600;
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-weight: 500;
+        font-size: 1.25rem;
+    }
+
+    /* Code and preformatted text styles */
+    code {
+        border: 1px solid var(--border);
+        border-radius: 0.4rem;
+
+        background-color: var(--secondary);
+
+        font-size: 0.85rem;
+        padding: 0.25rem 0.3rem;
+    }
+
+    /* Quotes */
+    blockquote {
+        border-left: 4px solid var(--border);
+        margin: 1rem 0;
+        padding-left: 1rem;
+    }
+
+    /* Line breaks */
+    hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 2rem 0;
+    }
+}

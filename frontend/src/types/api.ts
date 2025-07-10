@@ -18,3 +18,12 @@ export interface TokenUserInfo {
     name: string;
     email: string;
 }
+
+// -------- Templates --------
+export interface Template {
+    id: number;
+    user_id: number;
+    name: string;
+    template: string;
+    created_at: string;
+}

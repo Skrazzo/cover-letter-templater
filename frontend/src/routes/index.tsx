@@ -8,7 +8,7 @@ export const Route = createFileRoute("/")({
 function App() {
     return (
         <Authorised>
-            <h1 className="mt-4">Welcome to cover letter</h1>
+            <h1>Welcome to cover letter</h1>
         </Authorised>
     );
 }

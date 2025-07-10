@@ -49,7 +49,7 @@ class Requests {
         return data.data;
     }
 
-    async get<T>(url: string, props: GetProps<T>): Promise<T | void> {
+    async get<T>(url: string, props: GetProps<T>): Promise<T | null> {
         // Call before
         props.before?.();
 
@@ -78,6 +78,7 @@ class Requests {
             // Show notification, and call error callback
             toast.error(err.message);
             props.error?.(err);
+            return null;
         } finally {
             props.finally?.();
         }
