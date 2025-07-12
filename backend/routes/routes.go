@@ -32,6 +32,8 @@ func SetupRoutes() *gin.Engine {
 
 	// Cover letter routes
 	covers := auth.Group("/cover")
+	covers.GET("", cover.Get)
+	covers.GET("/:id", cover.GetID)
 	covers.POST("", cover.Post)
 
 	return r

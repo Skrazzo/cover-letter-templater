@@ -9,6 +9,7 @@ import (
 	res "backend/utils/responses"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -16,7 +17,61 @@ import (
 
 var validate = validator.New()
 
+type CoverGet struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 func Get(c *gin.Context) {
+	user, err := jwt.GetUser(c)
+	if err != nil {
+		res.NeedsToLogin(c)
+		return
+	}
+
+	covers, err := cover.Get("user_id = $1", user.Id)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Asign only id and name, for efficieny
+	coverPreviews := make([]CoverGet, len(covers))
+	for i, cover := range covers {
+		coverPreviews[i] = CoverGet{
+			Id:   cover.ID,
+			Name: cover.Name,
+		}
+	}
+
+	res.Success(c, gin.H{"covers": coverPreviews})
+}
+
+func GetID(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	user, err := jwt.GetUser(c)
+	if err != nil {
+		res.NeedsToLogin(c)
+		return
+	}
+
+	cover, err := cover.Get("id = $1 AND user_id = $2", id, user.Id)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if len(cover) == 0 {
+		res.Error(c, "Cover not found", http.StatusNotFound)
+		return
+	}
+
+	res.Success(c, gin.H{"cover": cover[0]})
 }
 
 type CoverPost struct {

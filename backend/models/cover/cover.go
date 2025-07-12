@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type Template struct {
+type Cover struct {
 	ID        int       `json:"id"`
 	UserID    int       `json:"user_id"`
 	Name      string    `json:"name"`
@@ -14,7 +14,7 @@ type Template struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-func Get(where string, args ...any) ([]Template, error) {
+func Get(where string, args ...any) ([]Cover, error) {
 	// Create timeout context
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -36,9 +36,9 @@ func Get(where string, args ...any) ([]Template, error) {
 	defer rows.Close()
 
 	// Prepeare results now
-	var results []Template
+	var results []Cover
 	for rows.Next() {
-		var t Template
+		var t Cover
 		if err := rows.Scan(&t.ID, &t.UserID, &t.Name, &t.Letter, &t.CreatedAt); err != nil {
 			return nil, err
 		}
