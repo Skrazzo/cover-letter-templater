@@ -3,12 +3,12 @@ import Authorised from "@/layouts/Authorised";
 import requests from "@/lib/requests";
 import type { CoverLetter } from "@/types/api";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import "../../editor.css";
 import { toPng } from "html-to-image";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { DownloadIcon } from "lucide-react";
+import { DownloadIcon, EditIcon } from "lucide-react";
 
 export const Route = createFileRoute("/cover/$coverId")({
     component: RouteComponent,
@@ -51,10 +51,20 @@ function RouteComponent() {
         <Authorised>
             <div className="flex items-center gap-4 mb-8 md:justify-between">
                 <h1 className="text-2xl font-semibold">{cover.data?.cover.name || "Loading..."}</h1>
-                <Button onClick={handleDownload}>
-                    <DownloadIcon />
-                </Button>
-                {/* edit buttons */}
+
+                <div className="space-x-2">
+                    <Link
+                        to={"/cover/edit/$coverId"}
+                        params={{ coverId: cover.data?.cover.id.toString() || "" }}
+                    >
+                        <Button variant="outline">
+                            <EditIcon />
+                        </Button>
+                    </Link>
+                    <Button onClick={handleDownload}>
+                        <DownloadIcon />
+                    </Button>
+                </div>
             </div>
 
             <div ref={coverRef} className="bg-background p-4 border">

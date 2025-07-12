@@ -135,6 +135,8 @@ export default () => {
     // Get field with predefined text type
     const field = useFieldContext<string>();
 
+    if (field.state.value === null) return <div>Loading...</div>;
+
     // Configure editor
     const editor = useEditor({
         onUpdate: ({ editor }) => field.handleChange(editor.getHTML()),
@@ -150,6 +152,7 @@ export default () => {
                 <MenuBar editor={editor} />
                 <EditorContent editor={editor} />
             </div>
+
             {!field.state.meta.isValid && (
                 <span className="text-xs text-danger mt-1">
                     {field.state.meta.errors.map((e) => e.message).join(", ")}

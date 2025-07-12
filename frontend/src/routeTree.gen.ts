@@ -16,6 +16,7 @@ import { Route as TemplatesIndexRouteImport } from './routes/templates/index'
 import { Route as TemplatesCreateRouteImport } from './routes/templates/create'
 import { Route as CoverCreateRouteImport } from './routes/cover/create'
 import { Route as CoverCoverIdRouteImport } from './routes/cover/$coverId'
+import { Route as CoverEditCoverIdRouteImport } from './routes/cover/edit.$coverId'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -52,6 +53,11 @@ const CoverCoverIdRoute = CoverCoverIdRouteImport.update({
   path: '/cover/$coverId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoverEditCoverIdRoute = CoverEditCoverIdRouteImport.update({
+  id: '/cover/edit/$coverId',
+  path: '/cover/edit/$coverId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/cover/create': typeof CoverCreateRoute
   '/templates/create': typeof TemplatesCreateRoute
   '/templates': typeof TemplatesIndexRoute
+  '/cover/edit/$coverId': typeof CoverEditCoverIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/cover/create': typeof CoverCreateRoute
   '/templates/create': typeof TemplatesCreateRoute
   '/templates': typeof TemplatesIndexRoute
+  '/cover/edit/$coverId': typeof CoverEditCoverIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/cover/create': typeof CoverCreateRoute
   '/templates/create': typeof TemplatesCreateRoute
   '/templates/': typeof TemplatesIndexRoute
+  '/cover/edit/$coverId': typeof CoverEditCoverIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/cover/create'
     | '/templates/create'
     | '/templates'
+    | '/cover/edit/$coverId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/cover/create'
     | '/templates/create'
     | '/templates'
+    | '/cover/edit/$coverId'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/cover/create'
     | '/templates/create'
     | '/templates/'
+    | '/cover/edit/$coverId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +131,7 @@ export interface RootRouteChildren {
   CoverCreateRoute: typeof CoverCreateRoute
   TemplatesCreateRoute: typeof TemplatesCreateRoute
   TemplatesIndexRoute: typeof TemplatesIndexRoute
+  CoverEditCoverIdRoute: typeof CoverEditCoverIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoverCoverIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cover/edit/$coverId': {
+      id: '/cover/edit/$coverId'
+      path: '/cover/edit/$coverId'
+      fullPath: '/cover/edit/$coverId'
+      preLoaderRoute: typeof CoverEditCoverIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,6 +203,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoverCreateRoute: CoverCreateRoute,
   TemplatesCreateRoute: TemplatesCreateRoute,
   TemplatesIndexRoute: TemplatesIndexRoute,
+  CoverEditCoverIdRoute: CoverEditCoverIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
