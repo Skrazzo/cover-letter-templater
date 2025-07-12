@@ -18,3 +18,16 @@ CREATE TABLE IF NOT EXISTS "templates" (
         REFERENCES users (id)
         ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS "cover_letters" (
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER NOT NULL,
+    "name" TEXT NOT NULL UNIQUE,
+    "letter" TEXT NOT NULL,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_user
+        FOREIGN KEY (user_id)
+        REFERENCES users (id)
+        ON DELETE CASCADE
+);

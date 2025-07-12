@@ -19,4 +19,5 @@ func LoadEnv() {
 	Env["db"] = defaultValue(os.Getenv("POSTGRES_DB"), "postgresql://postgres:postgres@db:5432/cover-letter")
 	Env["JWT_SECRET"] = defaultValue(os.Getenv("JWT_SECRET"), "just a random string here")
 	Env["Environment"] = defaultValue(os.Getenv("Environment"), "dev")
+	Env["CHATGPT_KEY"] = defaultValue(os.Getenv("CHATGPT_KEY"), "")
 }

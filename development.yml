@@ -10,7 +10,7 @@ services:
     volumes:
       - "./backend:/app"
     env_file:
-      - ./backend/.env
+      - .env
     environment:
       # - GIN_MODE=release # For production
       - GIN_MODE=debug
