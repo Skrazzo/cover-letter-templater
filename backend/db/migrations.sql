@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS "templates" (
 CREATE TABLE IF NOT EXISTS "cover_letters" (
     "id" SERIAL PRIMARY KEY,
     "user_id" INTEGER NOT NULL,
-    "name" VARCHAR(50) NOT NULL UNIQUE,
+    "name" TEXT NOT NULL UNIQUE,
     "letter" TEXT NOT NULL,
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 

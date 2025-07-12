@@ -1,11 +1,13 @@
 package cover
 
 import (
+	"backend/models/cover"
 	"backend/models/template"
 	"backend/utils"
 	"backend/utils/chatgpt"
 	"backend/utils/jwt"
 	res "backend/utils/responses"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -57,7 +59,32 @@ func Post(c *gin.Context) {
 		return
 	}
 
-	res.Success(c, generatedCover)
+	// Find cover name that doesnt exist
+	coverName := generatedCover.Name
+	for i := 1; true; i++ {
+		// Try to find cover with same name
+		covers, err := cover.Get("name = $1 AND user_id = $2", coverName, user.Id)
+		if err != nil {
+			res.Error(c, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Found non existent name
+		if len(covers) == 0 {
+			break
+		}
+
+		// Change number on name
+		coverName = fmt.Sprintf("%s (%d)", generatedCover.Name, i)
+	}
+
+	// Save name in database
+	if err := cover.Create(coverName, generatedCover.Cover, user.Id); err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	res.Success(c, gin.H{"message": "Successfully created " + coverName})
 }
 
 func Put(c *gin.Context) {
