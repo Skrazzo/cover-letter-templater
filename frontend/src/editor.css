@@ -24,6 +24,11 @@
         margin-top: 0;
     }
 
+    /* Text */
+    p {
+        margin-top: 0.5rem;
+    }
+
     /* Links */
     a {
         color: var(--editor-accent);

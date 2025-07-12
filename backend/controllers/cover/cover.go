@@ -29,7 +29,7 @@ func Get(c *gin.Context) {
 		return
 	}
 
-	covers, err := cover.Get("user_id = $1", user.Id)
+	covers, err := cover.Get("user_id = $1 ORDER BY created_at DESC", user.Id)
 	if err != nil {
 		res.Error(c, err.Error(), http.StatusInternalServerError)
 		return

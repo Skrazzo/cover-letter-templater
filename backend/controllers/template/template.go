@@ -69,7 +69,7 @@ func Get(c *gin.Context) {
 	}
 
 	// Get all user templates
-	templates, err := template.Get("user_id = $1", user.Id)
+	templates, err := template.Get("user_id = $1 ORDER BY created_at DESC", user.Id)
 	if err != nil {
 		res.Error(c, err.Error(), http.StatusInternalServerError)
 		return
