@@ -28,8 +28,10 @@ export default function SelectField({ data, label, className = "" }: SelectProps
             )}
 
             <Select
-                onValueChange={field.handleChange}
-                onOpenChange={field.handleBlur}
+                onValueChange={(val) => {
+                    field.handleChange(val);
+                    field.handleBlur();
+                }}
                 defaultValue={field.state.value}
             >
                 <SelectTrigger className={"w-full"}>

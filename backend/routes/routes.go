@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/controllers/cover"
 	"backend/controllers/template"
 	"backend/controllers/user"
 	"backend/middleware"
@@ -28,6 +29,10 @@ func SetupRoutes() *gin.Engine {
 	templates.POST("", template.Create)
 	// PUT (Edit)
 	// DELETE (Delete)
+
+	// Cover letter routes
+	covers := auth.Group("/cover")
+	covers.POST("", cover.Post)
 
 	return r
 }
