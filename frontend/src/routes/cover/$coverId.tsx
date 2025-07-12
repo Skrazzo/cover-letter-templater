@@ -5,6 +5,10 @@ import type { CoverLetter } from "@/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import "../../editor.css";
+import { toPng } from "html-to-image";
+import { useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { DownloadIcon } from "lucide-react";
 
 export const Route = createFileRoute("/cover/$coverId")({
     component: RouteComponent,
@@ -26,14 +30,34 @@ function RouteComponent() {
         },
     });
 
+    // Handle png downloads
+    const coverRef = useRef<HTMLDivElement>(null);
+
+    const handleDownload = async () => {
+        if (coverRef.current === null) return;
+
+        const dataUrl = await toPng(coverRef.current, {
+            cacheBust: true,
+            pixelRatio: 2,
+            skipFonts: false,
+        });
+        const link = document.createElement("a");
+        link.download = `${cover.data?.cover.name || "Cover"}.png`;
+        link.href = dataUrl;
+        link.click();
+    };
+
     return (
         <Authorised>
-            <div>
+            <div className="flex items-center gap-4 mb-8 md:justify-between">
                 <h1 className="text-2xl font-semibold">{cover.data?.cover.name || "Loading..."}</h1>
+                <Button onClick={handleDownload}>
+                    <DownloadIcon />
+                </Button>
                 {/* edit buttons */}
             </div>
 
-            <div className="mt-8 p-4 border rounded-md">
+            <div ref={coverRef} className="bg-background p-4 border">
                 {coverState !== null ? (
                     coverState
                 ) : (
