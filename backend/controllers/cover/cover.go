@@ -51,13 +51,13 @@ func Post(c *gin.Context) {
 	}
 
 	// Call chat and ask for cover letter nicely
-	coverLetter, err := chatgpt.GenerateCoverLetter(templates[0].Template, data.Application)
+	generatedCover, err := chatgpt.GenerateCoverLetter(templates[0].Template, data.Application)
 	if err != nil {
 		res.Error(c, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	res.Success(c, coverLetter)
+	res.Success(c, generatedCover)
 }
 
 func Put(c *gin.Context) {
