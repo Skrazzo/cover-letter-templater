@@ -3,6 +3,7 @@ package cover
 import (
 	"backend/models/template"
 	"backend/utils"
+	"backend/utils/chatgpt"
 	"backend/utils/jwt"
 	res "backend/utils/responses"
 	"net/http"
@@ -43,9 +44,20 @@ func Post(c *gin.Context) {
 		return
 	}
 
-	// Call chat and ask for cover letter nicely
+	// Check if template exists
+	if len(templates) == 0 {
+		res.Error(c, "Template not found", http.StatusNotFound)
+		return
+	}
 
-	res.Success(c, templates)
+	// Call chat and ask for cover letter nicely
+	coverLetter, err := chatgpt.GenerateCoverLetter(templates[0].Template, data.Application)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	res.Success(c, coverLetter)
 }
 
 func Put(c *gin.Context) {
