@@ -5,7 +5,8 @@ import Authorised from "@/layouts/Authorised";
 import requests from "@/lib/requests";
 import type { Template } from "@/types/api";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { z } from "zod/v4";
 
 export const Route = createFileRoute("/cover/create")({
@@ -18,6 +19,9 @@ const createSchema = z.object({
 });
 
 function RouteComponent() {
+    const loading = useState(false);
+    const navigate = useNavigate();
+
     const templates = useQuery({
         queryKey: ["user_templates"],
         queryFn: () => requests.get<Template[]>("/templates", {}),
@@ -37,7 +41,18 @@ function RouteComponent() {
             onBlur: createSchema,
         },
         onSubmit({ value }) {
-            console.log(JSON.stringify(value));
+            requests.post("/cover", {
+                data: value,
+                before() {
+                    loading[1](true);
+                },
+                finally() {
+                    loading[1](false);
+                },
+                success() {
+                    navigate({ to: "/" });
+                },
+            });
         },
     });
 
@@ -64,7 +79,7 @@ function RouteComponent() {
                 <form.AppField name="application" children={(f) => <f.RichTextEdit />} />
             </div>
 
-            <Button onClick={form.handleSubmit} className="mt-4">
+            <Button disabled={loading[0]} onClick={form.handleSubmit} className="mt-4">
                 Generate cover letter
             </Button>
         </Authorised>
