@@ -20,6 +20,10 @@ function RouteComponent() {
     const templatesState = renderQueryState({
         query: templates,
         noFound: "templates",
+        skeleton: {
+            count: 6,
+            className: "h-15",
+        },
     });
 
     return (
