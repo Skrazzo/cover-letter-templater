@@ -33,9 +33,9 @@ function RouteComponent() {
         const a = confirm("Are you sure?");
         if (!a) return;
 
-        requests.delete(`/template/${templateId}`, {
+        requests.delete(`/templates/${templateId}`, {
             success() {
-                navigate({ to: "/" });
+                navigate({ to: "/templates" });
             },
         });
     };

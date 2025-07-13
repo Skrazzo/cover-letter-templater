@@ -82,3 +82,13 @@ func Update(id int, name string, template string) error {
 
 	return err
 }
+
+func Delete(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `DELETE FROM templates WHERE id = $1`
+	_, err := db.Pool.Exec(ctx, query, id)
+
+	return err
+}

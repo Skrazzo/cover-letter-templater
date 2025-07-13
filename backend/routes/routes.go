@@ -29,7 +29,7 @@ func SetupRoutes() *gin.Engine {
 	templates.GET("/:id", template.GetID)
 	templates.POST("", template.Create)
 	templates.PUT("/:id", template.Put)
-	// DELETE (Delete)
+	templates.DELETE("/:id", template.Delete)
 
 	// Cover letter routes
 	covers := auth.Group("/cover")

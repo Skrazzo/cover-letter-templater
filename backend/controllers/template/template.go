@@ -174,4 +174,36 @@ func Put(c *gin.Context) {
 }
 
 func Delete(c *gin.Context) {
+	// Get request data, with id, and user
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	user, err := jwt.GetUser(c)
+	if err != nil {
+		res.NeedsToLogin(c)
+		return
+	}
+
+	// Check if template exists
+	templates, err := template.Get("id = $1 AND user_id = $2", id, user.Id)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if len(templates) == 0 {
+		res.Error(c, "Template not found", http.StatusNotFound)
+		return
+	}
+
+	// Delete template, and return success
+	if err := template.Delete(id); err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	res.Success(c, gin.H{"message": "Successfully deleted template"})
 }
