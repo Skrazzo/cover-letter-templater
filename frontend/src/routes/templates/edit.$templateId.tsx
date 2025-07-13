@@ -14,7 +14,7 @@ export const Route = createFileRoute("/templates/edit/$templateId")({
 });
 
 const editSchema = z.object({
-    name: z.string().min(1, "Name is required"),
+    name: z.string().min(1, "Name is required").max(50, "Name is too long"),
     content: z.string().min(50, "Template is too short"),
 });
 
@@ -25,7 +25,7 @@ function RouteComponent() {
 
     const template = useQuery({
         queryKey: ["template", templateId],
-        queryFn: () => requests.get<{ template: Template }>(`/template/${templateId}`, {}),
+        queryFn: () => requests.get<{ template: Template }>(`/templates/${templateId}`, {}),
     });
     const templateState = renderQueryState({
         query: template,
@@ -39,13 +39,13 @@ function RouteComponent() {
     const edit = useAppForm({
         defaultValues: {
             name: template.data?.template.name || "",
-            content: template.data?.template.content || null,
+            content: template.data?.template.template || null,
         },
         validators: {
             onBlur: editSchema,
         },
         onSubmit({ value }) {
-            requests.put(`/template/${templateId}`, {
+            requests.put(`/templates/${templateId}`, {
                 data: value,
                 before() {
                     loading[1](true);

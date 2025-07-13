@@ -2,6 +2,7 @@ package template
 
 import (
 	"backend/models/template"
+	"backend/utils"
 	"backend/utils/jwt"
 	res "backend/utils/responses"
 	"net/http"
@@ -124,7 +125,52 @@ func GetID(c *gin.Context) {
 	res.Success(c, gin.H{"template": templates[0]})
 }
 
-func Update(c *gin.Context) {
+type PutData struct {
+	Name    string `json:"name" validate:"required,min=1,max=50"`
+	Content string `json:"content" validate:"required,min=50"`
+}
+
+func Put(c *gin.Context) {
+	// Get request data, with id, and user
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	user, err := jwt.GetUser(c)
+	if err != nil {
+		res.NeedsToLogin(c)
+		return
+	}
+
+	var data PutData
+	if err := utils.BindAndValidate(&data, c); err != nil {
+		res.Error(c, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Check if template already exists
+	templates, err := template.Get("user_id = $1 AND id = $2", user.Id, id)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Check if template is found
+	if len(templates) == 0 {
+		res.Error(c, "Template not found", http.StatusNotFound)
+		return
+	}
+
+	// Update template
+	err = template.Update(id, data.Name, data.Content)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	res.Success(c, gin.H{"message": "Successfully updated template"})
 }
 
 func Delete(c *gin.Context) {

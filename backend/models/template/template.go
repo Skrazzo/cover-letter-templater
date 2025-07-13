@@ -72,3 +72,13 @@ func Get(where string, args ...any) ([]Template, error) {
 
 	return results, nil
 }
+
+func Update(id int, name string, template string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `UPDATE templates SET name = $1, template = $2 WHERE id = $3`
+	_, err := db.Pool.Exec(ctx, query, name, template, id)
+
+	return err
+}
