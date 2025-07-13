@@ -6,7 +6,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import type { TemplatePreview } from "@/types/api";
 import renderQueryState from "@/components/RenderQueryState";
-import Template from "@/components/Template";
+import Template from "@/components/TemplateLink";
 
 export const Route = createFileRoute("/templates/")({
     component: RouteComponent,

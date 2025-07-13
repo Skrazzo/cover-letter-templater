@@ -1,13 +1,23 @@
-import type { TemplatePreview } from "@/types/api";
-import { Link } from "@tanstack/react-router";
+import { withForm } from "@/hooks/formHook";
 
-export default function Template({ template }: { template: TemplatePreview }) {
-    return (
-        <Link to={"/templates/$templateId"} params={{ templateId: template.id.toString() }}>
-            <div className="p-4 border rounded-lg hover:bg-muted/40">
-                <h2 className="text-xl font-semibold">{template.name}</h2>
+const Template = withForm({
+    defaultValues: {
+        name: "",
+        template: "",
+    },
+    props: {},
+    render({ form }) {
+        return (
+            <div className="mt-4 flex flex-col gap-4">
+                <form.AppField
+                    name="name"
+                    children={(f) => <f.TextField maxLength={50} label="Name" placeholder="Template name" />}
+                />
+
+                <form.AppField name="template" children={(f) => <f.RichTextEdit />} />
             </div>
-        </Link>
-    );
-}
+        );
+    },
+});
 
+export default Template;

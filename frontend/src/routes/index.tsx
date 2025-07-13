@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import requests from "@/lib/requests";
 import type { CoverLetterPreview } from "@/types/api";
 import renderQueryState from "@/components/RenderQueryState";
-import CoverLetter from "@/components/CoverLetter";
+import CoverLetter from "@/components/CoverLetterLink";
 
 export const Route = createFileRoute("/")({
     component: App,
