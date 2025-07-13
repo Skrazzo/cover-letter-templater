@@ -15,7 +15,15 @@ interface PostProps<T> extends RequestProps<T> {
     data: Record<string, any>;
 }
 
+interface PutProps<T> extends RequestProps<T> {
+    data: Record<string, any>;
+}
+
 interface GetProps<T> extends RequestProps<T> {
+    params?: Record<string, any>;
+}
+
+interface DeleteProps<T> extends RequestProps<T> {
     params?: Record<string, any>;
 }
 
@@ -54,7 +62,9 @@ class Requests {
         props.before?.();
 
         // Get url parameters
-        const urlParams = props.params ? new URLSearchParams(props.params).toString() : "";
+        const urlParams = props.params
+            ? new URLSearchParams(props.params).toString()
+            : "";
         // Normalize url
         const finalUrl = normalizeLink(`${API_BASE}/${url}${urlParams}`);
 
@@ -98,6 +108,74 @@ class Requests {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(props.data),
+            });
+
+            // Verify data
+            const responseData = await this.verifyData<T>(res);
+
+            // Otherwise return response data
+            props.success?.(responseData);
+            return responseData;
+        } catch (error) {
+            const err = error as Error;
+            // Show notification, and call error callback
+            toast.error(err.message);
+            props.error?.(err);
+        } finally {
+            props.finally?.();
+        }
+    }
+
+    async put<T>(url: string, props: PutProps<T>): Promise<T | void> {
+        props.before?.();
+
+        // Normalize url
+        const finalUrl = normalizeLink(`${API_BASE}/${url}`);
+
+        try {
+            // Do request
+            const res = await fetch(finalUrl, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(props.data),
+            });
+
+            // Verify data
+            const responseData = await this.verifyData<T>(res);
+
+            // Otherwise return response data
+            props.success?.(responseData);
+            return responseData;
+        } catch (error) {
+            const err = error as Error;
+            // Show notification, and call error callback
+            toast.error(err.message);
+            props.error?.(err);
+        } finally {
+            props.finally?.();
+        }
+    }
+
+    async delete<T>(url: string, props: DeleteProps<T>): Promise<T | void> {
+        // Call before
+        props.before?.();
+
+        // Get url parameters
+        const urlParams = props.params
+            ? new URLSearchParams(props.params).toString()
+            : "";
+        // Normalize url
+        const finalUrl = normalizeLink(`${API_BASE}/${url}${urlParams}`);
+
+        try {
+            // Do request
+            const res = await fetch(finalUrl, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
             });
 
             // Verify data
