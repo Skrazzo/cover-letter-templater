@@ -6,10 +6,9 @@ import type { TokenUserInfo } from "@/types/api";
 
 interface Props {
     children: React.ReactNode;
-    className?: string;
 }
 
-export default function Authorised({ children, className = "" }: Props) {
+export default function Authorised({ children }: Props) {
     // Check authentication
     useQuery({
         queryKey: ["user_info"],

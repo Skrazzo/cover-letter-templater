@@ -5,9 +5,16 @@
 
 :8080 {
     encode
-    reverse_proxy frontend:3000
 
+    # Proxy to backend
     handle_path /api* {
         reverse_proxy backend:8080
+    }
+
+    # Server static files
+    handle_path /* {
+        root * /app
+        try_files {path} /index.html
+        file_server
     }
 }
