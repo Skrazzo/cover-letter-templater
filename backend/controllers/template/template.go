@@ -5,6 +5,8 @@ import (
 	"backend/utils/jwt"
 	res "backend/utils/responses"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -60,6 +62,13 @@ func Create(c *gin.Context) {
 	res.Success(c, gin.H{"message": "Successfully created template"})
 }
 
+type TemplatePreview struct {
+	Id        int       `json:"id"`
+	Name      string    `json:"name"`
+	UserID    int       `json:"user_id"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
 func Get(c *gin.Context) {
 	// Get user from context
 	user, err := jwt.GetUser(c)
@@ -75,7 +84,44 @@ func Get(c *gin.Context) {
 		return
 	}
 
-	res.Success(c, templates)
+	templatePreview := make([]TemplatePreview, len(templates))
+	for i, t := range templates {
+		templatePreview[i] = TemplatePreview{
+			Id:        t.ID,
+			Name:      t.Name,
+			UserID:    t.UserID,
+			CreatedAt: t.CreatedAt,
+		}
+	}
+
+	res.Success(c, templatePreview)
+}
+
+func GetID(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	user, err := jwt.GetUser(c)
+	if err != nil {
+		res.NeedsToLogin(c)
+		return
+	}
+
+	templates, err := template.Get("id = $1 AND user_id = $2", id, user.Id)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if len(templates) == 0 {
+		res.Error(c, "Template not found", http.StatusNotFound)
+		return
+	}
+
+	res.Success(c, gin.H{"template": templates[0]})
 }
 
 func Update(c *gin.Context) {

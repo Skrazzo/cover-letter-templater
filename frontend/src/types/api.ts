@@ -20,12 +20,15 @@ export interface TokenUserInfo {
 }
 
 // -------- Templates --------
-export interface Template {
+export interface TemplatePreview {
     id: number;
-    user_id: number;
     name: string;
-    template: string;
+    user_id: number;
     created_at: string;
+}
+
+export interface Template extends TemplatePreview {
+    template: string;
 }
 
 // -------- Cover letters --------

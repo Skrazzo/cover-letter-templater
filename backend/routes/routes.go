@@ -26,6 +26,7 @@ func SetupRoutes() *gin.Engine {
 	// Template routes (REST FUCKING GOOOOO)
 	templates := auth.Group("/templates")
 	templates.GET("", template.Get)
+	templates.GET(":id", template.GetID)
 	templates.POST("", template.Create)
 	// PUT (Edit)
 	// DELETE (Delete)

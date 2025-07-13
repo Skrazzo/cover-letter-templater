@@ -4,8 +4,9 @@ import requests from "@/lib/requests";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
-import type { Template } from "@/types/api";
+import type { TemplatePreview } from "@/types/api";
 import renderQueryState from "@/components/RenderQueryState";
+import Template from "@/components/Template";
 
 export const Route = createFileRoute("/templates/")({
     component: RouteComponent,
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/templates/")({
 function RouteComponent() {
     const templates = useQuery({
         queryKey: ["user_templates"],
-        queryFn: () => requests.get<Template[]>("/templates", {}),
+        queryFn: () => requests.get<TemplatePreview[]>("/templates", {}),
     });
     const templatesState = renderQueryState({
         query: templates,
@@ -33,14 +34,10 @@ function RouteComponent() {
                 </Link>
             </div>
 
-            <div className="flex flex-col gap-2 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                 {templatesState !== null
                     ? templatesState
-                    : templates.data?.map((template, i) => (
-                          <div className="flex gap-2 items-center" key={i}>
-                              <p className="text-lg">{template.name}</p>
-                          </div>
-                      ))}
+                    : templates.data?.map((template, i) => <Template template={template} key={i} />)}
             </div>
         </Authorised>
     );
