@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import requests from "@/lib/requests";
 import type { CoverLetterPreview } from "@/types/api";
 import renderQueryState from "@/components/RenderQueryState";
+import CoverLetter from "@/components/CoverLetter";
 
 export const Route = createFileRoute("/")({
     component: App,
@@ -35,19 +36,10 @@ function App() {
                 </Link>
             </div>
 
-            <div className="flex flex-col gap-2 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 {lettersState !== null
                     ? lettersState
-                    : letters.data?.covers.map((l) => (
-                          <Link
-                              className="px-3 py-2 cursor-pointer rounded hover:bg-secondary"
-                              to={"/cover/$coverId"}
-                              params={{ coverId: l.id.toString() }}
-                              key={l.id}
-                          >
-                              <p>{l.name}</p>
-                          </Link>
-                      ))}
+                    : letters.data?.covers.map((l) => <CoverLetter cover={l} />)}
             </div>
         </Authorised>
     );
