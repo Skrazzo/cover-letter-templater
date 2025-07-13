@@ -134,7 +134,7 @@ func Login(c *gin.Context) {
 	// Return token as cookie
 	secureCookie := config.Env["Environment"] != "dev" // In dev environment cookie wont be secure
 	// 3600S -> 1H * 24H -> 1D * 7 -> 1W
-	c.SetCookie("jwt-token", signedToken, 3600*24*7, "/", "localhost", secureCookie, true)
+	c.SetCookie("jwt-token", signedToken, 3600*24*7, "/", config.Env["DOMAIN"], secureCookie, true)
 
 	// Return successful login
 	res.Success(c, gin.H{"message": "Successfully logged in"})

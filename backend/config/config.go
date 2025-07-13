@@ -27,4 +27,6 @@ func LoadEnv() {
 	log.Printf("[INFO] Register set to '%s'\n", Env["REGISTER"])
 	Env["CHATGPT_MODEL"] = defaultValue(os.Getenv("CHATGPT_MODEL"), "gpt-4o")
 	log.Printf("[INFO] ChatGPT model set to '%s'\n", Env["CHATGPT_MODEL"])
+	Env["DOMAIN"] = defaultValue(os.Getenv("DOMAIN"), "localhost")
+	log.Printf("[INFO] Domain set to '%s'\n", Env["DOMAIN"])
 }
