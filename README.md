@@ -113,3 +113,11 @@ If you want to run development version, you will need docker. Docker handles fro
 # Run development environment
 docker compose -f development.yml up --build
 ```
+
+## Backup
+
+By default database backup is stored inside of `/data` subfolder. To backup postgreSQL database, run:
+
+```sh
+sudo docker exec -t cover-letter-db pg_dumpall -c -U postgres > cover.bak.sql && gzip cover.bak.sql
+```
