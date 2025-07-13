@@ -45,7 +45,7 @@ function RouteComponent() {
             onBlur: editSchema,
         },
         onSubmit({ value }) {
-            requests.post(`/cover/${coverId}`, {
+            requests.put(`/cover/${coverId}`, {
                 data: value,
                 before() {
                     loading[1](true);

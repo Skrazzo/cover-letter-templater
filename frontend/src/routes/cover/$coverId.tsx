@@ -3,12 +3,12 @@ import Authorised from "@/layouts/Authorised";
 import requests from "@/lib/requests";
 import type { CoverLetter } from "@/types/api";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import "../../editor.css";
 import { toPng } from "html-to-image";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { DownloadIcon, EditIcon } from "lucide-react";
+import { DownloadIcon, EditIcon, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/cover/$coverId")({
     component: RouteComponent,
@@ -16,6 +16,7 @@ export const Route = createFileRoute("/cover/$coverId")({
 
 function RouteComponent() {
     const { coverId } = Route.useParams();
+    const navigate = useNavigate();
 
     const cover = useQuery({
         queryKey: ["cover", coverId],
@@ -47,12 +48,30 @@ function RouteComponent() {
         link.click();
     };
 
+    const handleDelete = async () => {
+        const a = confirm("Are you sure?");
+        if (!a) return;
+
+        requests.delete(`/cover/${coverId}`, {
+            success() {
+                navigate({ to: "/" });
+            },
+        });
+    };
+
     return (
         <Authorised>
             <div className="flex items-center gap-4 mb-8 md:justify-between">
                 <h1 className="text-2xl font-semibold">{cover.data?.cover.name || "Loading..."}</h1>
 
                 <div className="space-x-2">
+                    <Button
+                        className="hover:bg-danger hover:text-background"
+                        variant="ghost"
+                        onClick={handleDelete}
+                    >
+                        <Trash2 />
+                    </Button>
                     <Link
                         to={"/cover/edit/$coverId"}
                         params={{ coverId: cover.data?.cover.id.toString() || "" }}

@@ -32,9 +32,11 @@ func SetupRoutes() *gin.Engine {
 
 	// Cover letter routes
 	covers := auth.Group("/cover")
-	covers.GET("", cover.Get)
-	covers.GET("/:id", cover.GetID)
-	covers.POST("", cover.Post)
+	covers.GET("", cover.Get)           // Get all letters
+	covers.GET("/:id", cover.GetID)     // get single letter
+	covers.POST("", cover.Post)         // create new letter
+	covers.PUT("/:id", cover.Put)       // edit letter
+	covers.DELETE("/:id", cover.Delete) // delete letter
 
 	return r
 }

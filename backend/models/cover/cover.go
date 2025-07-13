@@ -61,3 +61,23 @@ func Create(name string, letter string, userId float64) error {
 
 	return err
 }
+
+func Update(name string, letter string, id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `UPDATE cover_letters SET name = $1, letter = $2 WHERE id = $3`
+	_, err := db.Pool.Exec(ctx, query, name, letter, id)
+
+	return err
+}
+
+func Delete(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `DELETE FROM cover_letters WHERE id = $1`
+	_, err := db.Pool.Exec(ctx, query, id)
+
+	return err
+}
