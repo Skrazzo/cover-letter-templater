@@ -37,7 +37,7 @@ func GenerateCoverLetter(templateHTML string, jobHTML string) (GeneratedCover, e
 	}
 
 	payload := ChatRequest{
-		Model:          "gpt-4o", // o4-mini
+		Model:          config.Env["CHATGPT_MODEL"],
 		ResponseFormat: &ResponseFormat{Type: "json_object"},
 		Messages: []ChatMessage{
 			{

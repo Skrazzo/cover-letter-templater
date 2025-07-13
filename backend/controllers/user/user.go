@@ -25,6 +25,12 @@ type RegisterForm struct {
 }
 
 func Register(c *gin.Context) {
+	// Check for register environment
+	if config.Env["REGISTER"] != "true" {
+		res.Error(c, "Registration is disabled", http.StatusForbidden)
+		return
+	}
+
 	// Receive data from frontend, check if data is okay, hash password, call model
 	var data RegisterForm
 	if err := c.ShouldBindJSON(&data); err != nil {

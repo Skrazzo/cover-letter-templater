@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"log"
+	"os"
+)
 
 func defaultValue(val string, def string) string {
 	if val == "" {
@@ -20,4 +23,8 @@ func LoadEnv() {
 	Env["JWT_SECRET"] = defaultValue(os.Getenv("JWT_SECRET"), "just a random string here")
 	Env["Environment"] = defaultValue(os.Getenv("Environment"), "dev")
 	Env["CHATGPT_KEY"] = defaultValue(os.Getenv("CHATGPT_KEY"), "")
+	Env["REGISTER"] = defaultValue(os.Getenv("ALLOW_REGISTER"), "true")
+	log.Printf("[INFO] Register set to '%s'\n", Env["REGISTER"])
+	Env["CHATGPT_MODEL"] = defaultValue(os.Getenv("CHATGPT_MODEL"), "gpt-4o")
+	log.Printf("[INFO] ChatGPT model set to '%s'\n", Env["CHATGPT_MODEL"])
 }

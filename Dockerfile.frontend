@@ -3,8 +3,16 @@ FROM oven/bun:1.2.18-alpine@sha256:a7df687a2f684ee2f7404e2592039e192d75d26a04f84
 WORKDIR /app
 
 # Install dependencies
-COPY package.json bun.lock ./
+COPY frontend/package.json frontend/bun.lock ./
 RUN bun install --frozen-lockfile
+
+# ------ Build stage ------
+FROM deps AS build
+WORKDIR /app
+
+# Copy code, and compile
+COPY frontend/ .
+RUN bun run build
 
 # ------ Development stage ------
 FROM deps AS dev
@@ -12,3 +20,12 @@ FROM deps AS dev
 # Run
 CMD ["bun", "run", "dev"]
 
+# ------ Production stage ------
+FROM caddy:2.10.0-alpine@sha256:e2e3a089760c453bc51c4e718342bd7032d6714f15b437db7121bfc2de2654a6 AS prod
+WORKDIR /app
+
+# Copy built code
+COPY --from=build /app/dist .
+
+# Copy configuration for caddy
+COPY caddy/prod /etc/caddy/Caddyfile
