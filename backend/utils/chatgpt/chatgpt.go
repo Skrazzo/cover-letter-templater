@@ -37,12 +37,12 @@ func GenerateCoverLetter(templateHTML string, jobHTML string) (GeneratedCover, e
 	}
 
 	payload := ChatRequest{
-		Model: "gpt-4o", // o4-mini
+		Model:          "gpt-4o", // o4-mini
 		ResponseFormat: &ResponseFormat{Type: "json_object"},
 		Messages: []ChatMessage{
 			{
 				Role:    "system",
-				Content: `You are a helpful assistant that fills out cover letter templates in HTML format and provides a name for it. Replace all <...> tags like <company>, <experience>, etc., with appropriate content based on the job application. You must respond with a JSON object with two keys: "name" for the cover letter title (e.g., "Cover Letter for a Software Engineer"), and "cover" for the filled HTML cover letter.`,
+				Content: `You are a helpful assistant that fills out cover letter templates in HTML format and provides a name for it. Replace all <...> tags like <company>, <experience>, etc., with appropriate content based on the job application. You must respond with a JSON object with two keys: "name" for the cover letter title (e.g., "Software Engineer at OpenAi"), and "cover" for the filled HTML cover letter.`,
 			},
 			{
 				Role: "user",

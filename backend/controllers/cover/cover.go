@@ -9,6 +9,7 @@ import (
 	res "backend/utils/responses"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -16,7 +17,61 @@ import (
 
 var validate = validator.New()
 
+type CoverGet struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 func Get(c *gin.Context) {
+	user, err := jwt.GetUser(c)
+	if err != nil {
+		res.NeedsToLogin(c)
+		return
+	}
+
+	covers, err := cover.Get("user_id = $1 ORDER BY created_at DESC", user.Id)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Asign only id and name, for efficieny
+	coverPreviews := make([]CoverGet, len(covers))
+	for i, cover := range covers {
+		coverPreviews[i] = CoverGet{
+			Id:   cover.ID,
+			Name: cover.Name,
+		}
+	}
+
+	res.Success(c, gin.H{"covers": coverPreviews})
+}
+
+func GetID(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	user, err := jwt.GetUser(c)
+	if err != nil {
+		res.NeedsToLogin(c)
+		return
+	}
+
+	cover, err := cover.Get("id = $1 AND user_id = $2", id, user.Id)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if len(cover) == 0 {
+		res.Error(c, "Cover not found", http.StatusNotFound)
+		return
+	}
+
+	res.Success(c, gin.H{"cover": cover[0]})
 }
 
 type CoverPost struct {
@@ -87,8 +142,83 @@ func Post(c *gin.Context) {
 	res.Success(c, gin.H{"message": "Successfully created " + coverName})
 }
 
+type CoverPut struct {
+	Name   string `json:"name" validate:"required,min=1"`
+	Letter string `json:"letter" validate:"required,min=50"`
+}
+
 func Put(c *gin.Context) {
+	// Get request data
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	var data CoverPut
+	if err := utils.BindAndValidate(&data, c); err != nil {
+		res.Error(c, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	user, err := jwt.GetUser(c)
+	if err != nil {
+		res.NeedsToLogin(c)
+		return
+	}
+
+	// Find cover letter in database, verify it exists, and update it
+	letters, err := cover.Get("user_id = $1 AND id = $2", user.Id, id)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if len(letters) == 0 {
+		res.Error(c, "Cover letter not found", http.StatusNotFound)
+		return
+	}
+
+	err = cover.Update(data.Name, data.Letter, id)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	res.Success(c, gin.H{"message": "Successfully updated cover letter"})
 }
 
 func Delete(c *gin.Context) {
+	// Get request data
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	user, err := jwt.GetUser(c)
+	if err != nil {
+		res.NeedsToLogin(c)
+		return
+	}
+
+	// Find cover letter in database, verify it exists, and delete it
+	letters, err := cover.Get("user_id = $1 AND id = $2", user.Id, id)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if len(letters) == 0 {
+		res.Error(c, "Cover letter not found", http.StatusNotFound)
+		return
+	}
+
+	err = cover.Delete(id)
+	if err != nil {
+		res.Error(c, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	res.Success(c, gin.H{"message": "Successfully deleted cover letter"})
 }

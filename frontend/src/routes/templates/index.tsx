@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
 import Authorised from "@/layouts/Authorised";
 import requests from "@/lib/requests";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import type { Template } from "@/types/api";
-import { Skeleton } from "@/components/ui/skeleton";
 import renderQueryState from "@/components/RenderQueryState";
 
 export const Route = createFileRoute("/templates/")({

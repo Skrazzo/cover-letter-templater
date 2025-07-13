@@ -27,3 +27,15 @@ export interface Template {
     template: string;
     created_at: string;
 }
+
+// -------- Cover letters --------
+export interface CoverLetterPreview {
+    id: number;
+    name: string;
+}
+
+export interface CoverLetter extends CoverLetterPreview {
+    user_id: number;
+    letter: string;
+    created_at: string;
+}
