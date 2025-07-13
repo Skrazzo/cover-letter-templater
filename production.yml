@@ -3,53 +3,51 @@ services:
     build:
       context: ./backend
       dockerfile: ../Dockerfile.backend
-      target: dev # Development mode with hot reload
+      target: prod # Development mode with hot reload
     restart: unless-stopped
     container_name: cover-letter-backend
 
-    volumes:
-      - "./backend:/app"
     env_file:
       - .env
     environment:
       # - GIN_MODE=release # For production
-      - GIN_MODE=debug
+      - GIN_MODE=release
       # - POSTGRES_DB=postgresql://username:password@host:port/database_name
       - POSTGRES_DB=postgresql://postgres:postgres@db:5432/cover-letter
       # - Environment=prod # For production
-      - Environment=dev
+      - Environment=prod
     networks:
       - cover-letter-network
     depends_on:
       db: # Wait for database to be ready (Pass healthcheck)
         condition: service_healthy
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: ../Dockerfile.frontend
-      target: dev # Development stage
-    restart: unless-stopped
-    container_name: cover-letter-frontend
-
-    volumes:
-      - "./frontend:/app" # Mount frontend
-      - "/app/node_modules" # Ignore node_modules
-    networks:
-      - cover-letter-network
-  proxy:
-    image: caddy:alpine
-    restart: unless-stopped
-    container_name: cover-letter-proxy
-
-    networks:
-      - cover-letter-network
-    volumes:
-      - ./caddy/dev:/etc/caddy/Caddyfile
-    ports:
-      - 8000:8080
-    depends_on:
-      - frontend
-      - backend
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: ../Dockerfile.frontend
+  #     target: dev # Development stage
+  #   restart: unless-stopped
+  #   container_name: cover-letter-frontend
+  #
+  #   volumes:
+  #     - "./frontend:/app" # Mount frontend
+  #     - "/app/node_modules" # Ignore node_modules
+  #   networks:
+  #     - cover-letter-network
+  # proxy:
+  #   image: caddy:alpine
+  #   restart: unless-stopped
+  #   container_name: cover-letter-proxy
+  #
+  #   networks:
+  #     - cover-letter-network
+  #   volumes:
+  #     - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+  #   ports:
+  #     - 8000:8080
+  #   depends_on:
+  #     - frontend
+  #     - backend
   db:
     image: postgres:13.21-alpine3.22
     restart: unless-stopped
