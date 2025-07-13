@@ -7,7 +7,7 @@ Generates cover letters based on a template, and job listening using OpenAI.
 - Frontend:
   - `Reactjs`
   - `Tailwindcss`
-  - `Mantine` component library
+  - `Shadcn` component library
   - TanStack `Router` + `Query` + `Forms`
 - Backend: `Golang`
 - Database: `PostgreSQL`
@@ -47,11 +47,63 @@ backend/
 
 ### Structure example
 
-TODO: ADD STRUCTURE EXAMPLE
+```sh
+.
+├── bun.lock
+├── components.json
+├── index.html
+├── package.json
+├── public
+│   └── robots.txt
+├── README.md
+├── src
+│   ├── components                 # Components
+│   │   ├── CoverLetterLink.tsx
+│   │   ├── forms                  # Form components
+│   │   ├── Header.tsx
+│   │   ├── RenderQueryState.tsx
+│   │   ├── Template.tsx
+│   │   ├── TemplateLink.tsx
+│   │   └── ui                     # UI components (shadcn)
+│   ├── consts.ts                  # Some constants
+│   ├── editor.css                 # Global rich text editor styles
+│   ├── hooks                      # Custom hooks
+│   │   └── formHook.tsx
+│   ├── integrations
+│   │   └── tanstack-query
+│   ├── layouts                    # Layouts for guests, and auth users
+│   │   ├── Authorised.tsx
+│   │   └── Guest.tsx
+│   ├── lib                        # Custom utils
+│   │   ├── requests.ts
+│   │   ├── tryCatch.ts
+│   │   └── utils.ts
+│   ├── logo.svg
+│   ├── main.tsx
+│   ├── reportWebVitals.ts
+│   ├── routes                     # Routes
+│   │   ├── __root.tsx
+│   │   ├── cover                  # Cover letter routes
+│   │   ├── index.tsx              # Also cover letter (view dashboard)
+│   │   ├── login.tsx              # Login route
+│   │   ├── register.tsx           # Register route
+│   │   └── templates              # Template routes (CRUD)
+│   ├── routeTree.gen.ts
+│   ├── styles.css                 # Global css styles
+│   └── types                      # TS types
+│       ├── api.ts
+│       └── global.d.ts
+├── tsconfig.json
+└── vite.config.ts
+```
 
 ## Deployement
 
-TODO: ADD DEPLOYMENT INSTRUCTIONS
+You can easily deploy this app with docker compose (`production.yml`).
+
+```sh
+docker compose -f production.yml up --build
+```
 
 ## Development
 
