@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { LayoutTemplate, LetterText } from "lucide-react";
+import { LayoutTemplate, LetterText, PlusSquare } from "lucide-react";
 
 const linkClass = { className: "flex items-center gap-2" };
 const iconProps = { size: 20 };
@@ -10,7 +10,11 @@ export default function Header() {
             <nav className="flex items-center gap-4 font-bold ">
                 <Link to="/" {...linkClass}>
                     <LetterText {...iconProps} />
-                    Cover letters
+                    Covers
+                </Link>
+                <Link to="/cover/create" {...linkClass}>
+                    <PlusSquare {...iconProps} />
+                    Create letter
                 </Link>
                 <Link to="/templates" {...linkClass}>
                     <LayoutTemplate {...iconProps} />
