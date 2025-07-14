@@ -61,40 +61,44 @@ function RouteComponent() {
 
     return (
         <Authorised>
-            <div className="flex items-center gap-4 mb-8 md:justify-between">
-                <h1 className="text-2xl font-semibold">{cover.data?.cover.name || "Loading..."}</h1>
+            <div className="max-w-4xl mx-auto">
+                <div className="flex max-md:flex-col items-center gap-4 mb-8 md:justify-between">
+                    <h1 className="text-2xl max-md:text-center font-semibold">
+                        {cover.data?.cover.name || "Loading..."}
+                    </h1>
 
-                <div className="space-x-2">
-                    <Button
-                        className="hover:bg-danger hover:text-background"
-                        variant="ghost"
-                        onClick={handleDelete}
-                    >
-                        <Trash2 />
-                    </Button>
-                    <Link
-                        to={"/cover/edit/$coverId"}
-                        params={{ coverId: cover.data?.cover.id.toString() || "" }}
-                    >
-                        <Button variant="outline">
-                            <EditIcon />
+                    <div className="space-x-2">
+                        <Button
+                            className="hover:bg-danger hover:text-background"
+                            variant="ghost"
+                            onClick={handleDelete}
+                        >
+                            <Trash2 />
                         </Button>
-                    </Link>
-                    <Button onClick={handleDownload}>
-                        <DownloadIcon />
-                    </Button>
+                        <Link
+                            to={"/cover/edit/$coverId"}
+                            params={{ coverId: cover.data?.cover.id.toString() || "" }}
+                        >
+                            <Button variant="outline">
+                                <EditIcon />
+                            </Button>
+                        </Link>
+                        <Button onClick={handleDownload}>
+                            <DownloadIcon />
+                        </Button>
+                    </div>
                 </div>
-            </div>
 
-            <div ref={coverRef} className="bg-background p-4 border">
-                {coverState !== null ? (
-                    coverState
-                ) : (
-                    <div
-                        className="tiptap"
-                        dangerouslySetInnerHTML={{ __html: cover.data?.cover.letter || "" }}
-                    />
-                )}
+                <div ref={coverRef} className="bg-background p-4 border">
+                    {coverState !== null ? (
+                        coverState
+                    ) : (
+                        <div
+                            className="tiptap"
+                            dangerouslySetInnerHTML={{ __html: cover.data?.cover.letter || "" }}
+                        />
+                    )}
+                </div>
             </div>
         </Authorised>
     );
