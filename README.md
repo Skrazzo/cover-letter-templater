@@ -15,7 +15,7 @@ Generates cover letters based on a template, and job listening using OpenAI.
 
 ## Backend
 
-### Structure example (TODO: Replace with actual one)
+### Structure example
 
 ```sh
 backend/
